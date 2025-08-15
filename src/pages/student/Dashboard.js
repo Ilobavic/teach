@@ -12,6 +12,7 @@ import StudentQuizzes from './Quizzes';
 import StudentAnnouncements from './Announcements';
 import StudentGrades from './Grades';
 import StudentCalendar from './Calendar';
+import ClassDirectory from './ClassDirectory';
 
 const StudentDashboard = () => {
   const user = getCurrentUser();
@@ -45,8 +46,11 @@ const StudentDashboard = () => {
         <Tab eventKey="quizzes" title="📝 Take Quiz">
           <StudentQuizzes key={`quiz-${refreshToken}`} />
         </Tab>
-        <Tab eventKey="classes" title="🎥 Join Class">
+        <Tab eventKey="classes" title="🎥 My Lecturer's Classes">
           <StudentClasses key={`classes-${refreshToken}`} />
+        </Tab>
+        <Tab eventKey="directory" title="🎥 Other Lecturers' Classes">
+          <ClassDirectory />
         </Tab>
         <Tab eventKey="calendar" title="📅 Calendar">
           <StudentCalendar key={`cal-${refreshToken}`} />

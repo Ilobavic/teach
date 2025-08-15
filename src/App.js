@@ -11,6 +11,7 @@ import StudentDashboard from './pages/student/Dashboard';
 import LecturerDashboard from './pages/lecturer/Dashboard';
 import Notes from './pages/lecturer/Notes';
 import Classes from './pages/lecturer/Classes';
+import ClassPage from './pages/student/ClassPage';
 
 import { getCurrentUserRole, isAuthenticated, logout } from './services/auth';
 
@@ -19,7 +20,10 @@ function App() {
     <Router>
       <Navbar bg="primary" variant="dark" expand="md" className="shadow-sm">
         <Container>
-          <Navbar.Brand as={Link} to="/">Campus Portal</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">
+            <i className="bi bi-mortarboard-fill me-2" style={{ fontSize: 24 }}></i>
+            Campus Portal
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <NavbarBody />
         </Container>
@@ -60,6 +64,14 @@ function App() {
             element={
               <RequireAuth role="lecturer">
                 <Classes />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/class/:id"
+            element={
+              <RequireAuth role="student">
+                <ClassPage />
               </RequireAuth>
             }
           />

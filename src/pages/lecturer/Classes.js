@@ -3,12 +3,14 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { loadLecturerClasses, saveLecturerClasses } from '../../services/auth';
+import { getCurrentUser, loadLecturerClasses, saveLecturerClasses } from '../../services/auth';
 
 const Classes = () => {
   const [classesList, setClassesList] = useState([]);
   const [title, setTitle] = useState('');
+  const [subject, setSubject] = useState('');
   const [scheduledAt, setScheduledAt] = useState('');
+  const [meetingLocation, setMeetingLocation] = useState('');
   const [link, setLink] = useState('');
 
   useEffect(() => {
@@ -19,9 +21,17 @@ const Classes = () => {
     e.preventDefault();
     if (!title.trim()) return;
     const newClass = {
+      id: `${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
       title: title.trim(),
+      subject: subject.trim(),
+      lecturer: getCurrentUser()?.name || '',
       schedule: scheduledAt.trim(),
+      meetingLocation: meetingLocation.trim(),
       link: link.trim(),
+      // Placeholders to support future expansion
+      classNotes: '',
+      testDates: [],
+      assignments: [],
       createdAt: new Date().toISOString()
     };
     const updated = [newClass, ...classesList];
@@ -29,6 +39,8 @@ const Classes = () => {
     saveLecturerClasses(updated);
     setTitle('');
     setScheduledAt('');
+    setSubject('');
+    setMeetingLocation('');
     setLink('');
   };
 
@@ -49,9 +61,17 @@ const Classes = () => {
               <Form.Label>Class Title</Form.Label>
               <Form.Control value={title} onChange={(e) => setTitle(e.target.value)} />
             </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Subject</Form.Label>
+              <Form.Control value={subject} onChange={(e) => setSubject(e.target.value)} />
+            </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Scheduled At</Form.Label>
               <Form.Control type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Meeting Location</Form.Label>
+              <Form.Control placeholder="e.g., Room 205 or Online" value={meetingLocation} onChange={(e) => setMeetingLocation(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Meeting Link</Form.Label>
@@ -80,6 +100,9 @@ const Classes = () => {
                       Scheduled: {isNaN(new Date(c.schedule)) ? c.schedule : new Date(c.schedule).toLocaleString()}
                     </div>
                   )}
+                  <div>
+                    Meeting Location: {c.meetingLocation ? c.meetingLocation : <span className="text-danger">Not set</span>}
+                  </div>
                 </div>
                 <div className="d-flex gap-2">
                   {c.link && (

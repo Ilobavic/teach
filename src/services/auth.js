@@ -111,4 +111,14 @@ export function loadCalendarEvents() {
   return raw ? JSON.parse(raw) : [];
 }
 
+// Enrollments (student joins classes)
+export function saveEnrollments(enrollments) {
+  localStorage.setItem('class_enrollments', JSON.stringify(enrollments));
+}
+
+export function loadEnrollments() {
+  const raw = localStorage.getItem('class_enrollments');
+  return raw ? JSON.parse(raw) : [];
+}
+
 
