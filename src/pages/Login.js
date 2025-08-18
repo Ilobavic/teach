@@ -24,7 +24,7 @@ const Login = ({ defaultRole = 'student', hideRoleSelect = false }) => {
       setError('Please enter name and ID Number');
       return;
     }
-    // mock auth: accept any credentials
+   
     login(role, name.trim(), userId.trim());
     if (role === 'student') {
       navigate('/student', { replace: true });
@@ -58,7 +58,7 @@ const Login = ({ defaultRole = 'student', hideRoleSelect = false }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>ID Number</Form.Label>
+            <Form.Label>ID Number </Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter your ID Number"
