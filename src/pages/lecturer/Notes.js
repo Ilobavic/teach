@@ -3,7 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { loadLecturerNotes, saveLecturerNotes } from '../../services/auth';
+import { loadLecturerNotes, saveLecturerNotes, getCurrentUser } from '../../services/auth';
+import { notifyStudentsOfNewContent } from '../../services/notifications';
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
@@ -30,6 +31,19 @@ const Notes = () => {
     const newNotes = [newNote, ...notes];
     setNotes(newNotes);
     saveLecturerNotes(newNotes);
+    
+    // Notify students of new note
+    const user = getCurrentUser();
+    const notification = notifyStudentsOfNewContent(
+      'note',
+      newNote.title,
+      newNote.description || `New note: ${newNote.fileName}`,
+      user?.name || 'Lecturer'
+    );
+    
+    // Trigger toast notification
+    window.dispatchEvent(new CustomEvent('newNotification', { detail: notification }));
+    
     setTitle('');
     setDescription('');
     setFileObject(null);

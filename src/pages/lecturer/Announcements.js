@@ -3,7 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { loadAnnouncements, saveAnnouncements } from '../../services/auth';
+import { loadAnnouncements, saveAnnouncements, getCurrentUser } from '../../services/auth';
+import { notifyStudentsOfNewContent } from '../../services/notifications';
 
 const Announcements = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -35,6 +36,22 @@ const Announcements = () => {
     const updated = [newItem, ...announcements];
     setAnnouncements(updated);
     saveAnnouncements(updated);
+    
+    // Notify students of new announcement
+    const user = getCurrentUser();
+    const title = message.trim() || (fileName ? `New file: ${fileName}` : 'New announcement');
+    const content = message.trim() || (fileName ? `New file uploaded: ${fileName}` : 'New announcement posted');
+    
+    const notification = notifyStudentsOfNewContent(
+      'announcement',
+      title,
+      content,
+      user?.name || 'Lecturer'
+    );
+    
+    // Trigger toast notification
+    window.dispatchEvent(new CustomEvent('newNotification', { detail: notification }));
+    
     setMessage('');
     setLink('');
     setFileObject(null);

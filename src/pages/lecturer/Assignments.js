@@ -3,7 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { loadAssignments, saveAssignments } from '../../services/auth';
+import { loadAssignments, saveAssignments, getCurrentUser } from '../../services/auth';
+import { notifyStudentsOfNewContent } from '../../services/notifications';
 
 const Assignments = () => {
   const [assignments, setAssignments] = useState([]);
@@ -32,6 +33,19 @@ const Assignments = () => {
     const updated = [newItem, ...assignments];
     setAssignments(updated);
     saveAssignments(updated);
+    
+    // Notify students of new assignment
+    const user = getCurrentUser();
+    const notification = notifyStudentsOfNewContent(
+      'assignment',
+      newItem.title,
+      newItem.description || `New assignment: ${newItem.fileName}${newItem.dueDate ? ` (Due: ${new Date(newItem.dueDate).toLocaleDateString()})` : ''}`,
+      user?.name || 'Lecturer'
+    );
+    
+    // Trigger toast notification
+    window.dispatchEvent(new CustomEvent('newNotification', { detail: notification }));
+    
     setTitle('');
     setDescription('');
     setDueDate('');

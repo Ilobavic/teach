@@ -13,6 +13,7 @@ import StudentAnnouncements from './Announcements';
 import StudentGrades from './Grades';
 import StudentCalendar from './Calendar';
 import ClassDirectory from './ClassDirectory';
+import Messages from './Messages';
 
 const StudentDashboard = () => {
   const user = getCurrentUser();
@@ -24,15 +25,15 @@ const StudentDashboard = () => {
   return (
     <>
       <h2 className="mb-3">Student Dashboard</h2>
-      {/* <Card className="mb-4 card-hover animate__animated animate__fadeIn"> */}
-        {/* <Card.Body>
+      <Card className="mb-4 card-hover animate__animated animate__fadeIn">
+        <Card.Body>
           <Card.Title>Hello {user?.name || 'Student'}</Card.Title>
           <Card.Text>Here are the notes shared by your lecturers.</Card.Text>
           <Button variant="outline-secondary" size="sm" onClick={() => setRefreshToken((v) => v + 1)}>
             Refresh
           </Button>
-        </Card.Body> */}
-      {/* </Card> */}
+        </Card.Body>
+      </Card>
       <Tabs activeKey={defaultTab} onSelect={(k) => navigate(`/student?tab=${k}`)} className="mb-3">
         <Tab eventKey="notes" title="📄 Notes">
           <StudentNotes key={`notes-${refreshToken}`} />
@@ -57,6 +58,9 @@ const StudentDashboard = () => {
         </Tab>
         <Tab eventKey="announcements" title="📢 Announcements">
           <StudentAnnouncements key={`ann-${refreshToken}`} />
+        </Tab>
+        <Tab eventKey="messages" title="📧 Messages">
+          <Messages key={`messages-${refreshToken}`} />
         </Tab>
       </Tabs>
     </>

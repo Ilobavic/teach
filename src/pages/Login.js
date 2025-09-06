@@ -13,23 +13,35 @@ const Login = ({ defaultRole = 'student', hideRoleSelect = false }) => {
   const [name, setName] = useState('');
   const [userId, setUserId] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (location.state?.role) setRole(location.state.role);
   }, [location.state]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (isSubmitting) return; // Prevent multiple submissions
+    
     if (!name.trim() || !userId.trim()) {
       setError('Please enter name and ID Number');
       return;
     }
    
-    login(role, name.trim(), userId.trim());
-    if (role === 'student') {
-      navigate('/student', { replace: true });
-    } else {
-      navigate('/lecturer', { replace: true });
+    setIsSubmitting(true);
+    setError('');
+    
+    try {
+      login(role, name.trim(), userId.trim());
+      if (role === 'student') {
+        navigate('/student', { replace: true });
+      } else {
+        navigate('/lecturer', { replace: true });
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
@@ -55,20 +67,22 @@ const Login = ({ defaultRole = 'student', hideRoleSelect = false }) => {
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>ID Number </Form.Label>
+            <Form.Label>ID Number</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter your ID Number"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
+              required
             />
           </Form.Group>
-          <Button type="submit" variant="primary" className="w-100">
+          <Button type="submit" variant="primary" className="w-100" disabled={isSubmitting}>
             <i className="bi bi-box-arrow-in-right me-1"></i>
-            Login
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </Button>
         </Form>
       </Card.Body>

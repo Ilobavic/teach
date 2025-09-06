@@ -28,7 +28,6 @@ const Classes = () => {
       schedule: scheduledAt.trim(),
       meetingLocation: meetingLocation.trim(),
       link: link.trim(),
-      // Placeholders to support future expansion
       classNotes: '',
       testDates: [],
       assignments: [],

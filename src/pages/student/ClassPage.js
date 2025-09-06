@@ -6,7 +6,6 @@ import Alert from 'react-bootstrap/Alert';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { loadLecturerClasses, loadLecturerNotes, loadAssignments } from '../../services/auth';
 
-// Helper accessors that include classId fields if present
 function getClassById(id) {
   const classes = loadLecturerClasses();
   return classes.find((c) => String(c.id) === String(id));
@@ -24,8 +23,7 @@ const ClassPage = () => {
     );
   }
 
-  // Demo-only: load all notes/assignments and show; in a real app, filter by classId/subject
-  const notes = loadLecturerNotes ? loadLecturerNotes() : [];
+   const notes = loadLecturerNotes ? loadLecturerNotes() : [];
   const assignments = loadAssignments ? loadAssignments() : [];
 
   return (

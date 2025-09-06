@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import NotificationBell from './components/NotificationBell';
+import ToastManager from './components/ToastManager';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -20,21 +21,19 @@ function App() {
     <Router>
       <Navbar bg="primary" variant="dark" expand="md" className="shadow-sm">
         <Container>
-          <Navbar.Brand as={Link} to="/">
-            <i className="bi bi-mortarboard-fill me-2" style={{ fontSize: 24 }}></i>
-            Campus Portal
-          </Navbar.Brand>
+          <NavbarBrand />
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <NavbarBody />
         </Container>
       </Navbar>
 
       <Container className="py-4 animate__animated animate__fadeIn">
+        <ToastManager role={getCurrentUserRole()} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/login/student" element={<Login defaultRole="student" hideRoleSelect />} />
-          <Route path="/login/lecturer" element={<Login defaultRole="lecturer" hideRoleSelect />} />
+          <Route path="/login" element={<LoginGuard><Login /></LoginGuard>} />
+          <Route path="/login/student" element={<LoginGuard><Login defaultRole="student" hideRoleSelect /></LoginGuard>} />
+          <Route path="/login/lecturer" element={<LoginGuard><Login defaultRole="lecturer" hideRoleSelect /></LoginGuard>} />
           <Route
             path="/student/*"
             element={
@@ -82,59 +81,93 @@ function App() {
   );
 }
 
+function NavbarBrand() {
+  const navigate = useNavigate();
+  const authed = isAuthenticated();
+  const role = getCurrentUserRole();
+
+  const handleBrandClick = (e) => {
+    e.preventDefault();
+    if (!authed) {
+      // If not authenticated, go to home
+      navigate('/');
+    } else {
+      // If authenticated, go to appropriate dashboard
+      if (role === 'student') {
+        navigate('/student');
+      } else if (role === 'lecturer') {
+        navigate('/lecturer');
+      } else {
+        navigate('/');
+      }
+    }
+  };
+
+  return (
+    <Navbar.Brand 
+      href="#" 
+      onClick={handleBrandClick}
+      style={{ cursor: 'pointer' }}
+    >
+      <i className="bi bi-mortarboard-fill me-2" style={{ fontSize: 24 }}></i>
+      Campus Portal
+    </Navbar.Brand>
+  );
+}
+
 function NavbarBody() {
   const location = useLocation();
+  const navigate = useNavigate();
   const pathname = location.pathname || '';
   const isOnLogin = pathname.startsWith('/login');
-  const role = getCurrentUserRole();
   const authed = isAuthenticated();
-  const isStudentArea = pathname.startsWith('/student');
-  const isLecturerArea = pathname.startsWith('/lecturer');
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+      navigate('/', { replace: true });
+    }
+  };
 
   if (isOnLogin) return null;
 
   return (
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="me-auto">
-        {!authed && (
-          <>
-            <Nav.Link as={Link} to="/login/student">Student Login</Nav.Link>
-            <Nav.Link as={Link} to="/login/lecturer">Lecturer Login</Nav.Link>
-          </>
-        )}
-        {authed && role === 'student' && isStudentArea && (
-          <NavDropdown title="Student" id="student-nav-dropdown">
-            <NavDropdown.Item as={Link} to="/student?tab=notes">Notes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/student?tab=assignments">Assignments</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/student?tab=grades">Grades</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/student?tab=quizzes">Take Quiz</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/student?tab=classes">Join Class</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/student?tab=calendar">Calendar</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/student?tab=announcements">Announcements</NavDropdown.Item>
-          </NavDropdown>
-        )}
-        {authed && role === 'lecturer' && isLecturerArea && (
-          <NavDropdown title="Lecturer" id="lecturer-nav-dropdown">
-            <NavDropdown.Item as={Link} to="/lecturer?tab=notes">Notes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=assignments">Assignments</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=quizzes">Quizzes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=classes">Classes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=attendance">Attendance</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=grades">Grades</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=calendar">Calendar</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/lecturer?tab=announcements">Announcements</NavDropdown.Item>
-          </NavDropdown>
-        )}
+        {/* Navigation dropdowns removed */}
       </Nav>
-      <Nav>
+      <Nav className="align-items-center">
+        {authed && (
+          <div className="me-3">
+            <NotificationBell role={getCurrentUserRole()} />
+          </div>
+        )}
         {!authed ? (
           <Nav.Link as={Link} to="/login">Login</Nav.Link>
         ) : (
-          <Nav.Link onClick={() => { logout(); window.location.href = '/'; }}>Logout</Nav.Link>
+          <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         )}
       </Nav>
     </Navbar.Collapse>
   );
+}
+
+function LoginGuard({ children }) {
+  const authed = isAuthenticated();
+  const role = getCurrentUserRole();
+  
+  if (authed) {
+    // If already authenticated, redirect to appropriate dashboard
+    if (role === 'student') {
+      return <Navigate to="/student" replace />;
+    } else if (role === 'lecturer') {
+      return <Navigate to="/lecturer" replace />;
+    } else {
+      return <Navigate to="/" replace />;
+    }
+  }
+  
+  return children;
 }
 
 function RequireAuth({ children, role }) {

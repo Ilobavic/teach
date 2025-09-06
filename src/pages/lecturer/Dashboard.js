@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Card from 'react-bootstrap/Card';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -18,15 +18,16 @@ const LecturerDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const active = useMemo(() => new URLSearchParams(location.search).get('tab') || 'notes', [location.search]);
+  
   return (
     <>
       <h2 className="mb-3">Lecturer Dashboard</h2>
-      {/* <Card className="mb-3 card-hover animate__animated animate__fadeIn"> */}
-        {/* <Card.Body> */}
+      <Card className="mb-3 card-hover animate__animated animate__fadeIn">
+        <Card.Body>
           <Card.Title>Welcome {user?.name || 'Lecturer'}</Card.Title>
           <Card.Text>Use the tabs below to manage your content.</Card.Text>
-        {/* </Card.Body> */}
-      {/* </Card> */}
+        </Card.Body>
+      </Card>
       <Tabs activeKey={active} onSelect={(k) => navigate(`/lecturer?tab=${k}`)} className="mb-3">
         <Tab eventKey="notes" title="📄 Notes">
           <Notes />
