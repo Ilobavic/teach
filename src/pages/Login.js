@@ -33,11 +33,11 @@ const Login = ({ defaultRole = 'student', hideRoleSelect = false }) => {
     setError('');
     
     try {
-      login(role, name.trim(), userId.trim());
-      if (role === 'student') {
-        navigate('/student', { replace: true });
-      } else {
-        navigate('/lecturer', { replace: true });
+    login(role, name.trim(), userId.trim());
+    if (role === 'student') {
+      navigate('/student', { replace: true });
+    } else {
+      navigate('/lecturer', { replace: true });
       }
     } catch (err) {
       setError('Login failed. Please try again.');

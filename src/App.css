@@ -39,11 +39,19 @@
 
 /* Custom styles */
 body {
-  background: linear-gradient(180deg, rgba(245, 255, 252, 1) 0%, rgba(233, 252, 247, 1) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(245, 255, 252, 1) 0%,
+    rgba(233, 252, 247, 1) 100%
+  );
 }
 
 .hero {
-  background: linear-gradient(135deg, rgba(32, 201, 151, 0.15), rgba(32, 201, 151, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(32, 201, 151, 0.15),
+    rgba(32, 201, 151, 0.05)
+  );
   border-radius: 1rem;
   padding: 2rem;
 }
@@ -54,5 +62,22 @@ body {
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Loading Animation Styles */
+.typing-effect {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #fff;
+}
+
+.typing-cursor {
+  animation: blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
 }
