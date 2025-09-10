@@ -1,0 +1,148 @@
+/* Responsive Design Enhancements */
+
+/* Base mobile-first styles */
+.mobile-menu-toggle {
+  display: block;
+}
+
+/* Ensure buttons have adequate tap targets on mobile */
+@media (max-width: 767.98px) {
+  .btn {
+    padding: 0.5rem 1rem;
+    min-height: 44px; /* Minimum recommended touch target size */
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Improve spacing for mobile */
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Ensure notification badges don't overlap text */
+  .notification-badge {
+    font-size: 0.6rem !important;
+    padding: 0.2em 0.4em !important;
+  }
+  
+  /* Improve spacing in navigation */
+  .nav-link {
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Ensure form elements are easily tappable */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents iOS zoom on focus */
+    padding: 0.75rem !important;
+    min-height: 44px;
+  }
+  
+  /* Improve table display on small screens */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Adjust spacing for mobile */
+  .container, .container-fluid {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  
+  /* Ensure modal dialogs are properly sized */
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+  
+  /* Improve toast positioning on mobile */
+  .toast-container {
+    padding: 0.5rem;
+    max-width: 90%;
+  }
+}
+
+/* Medium devices and up */
+@media (min-width: 768px) {
+  .mobile-menu-toggle {
+    display: none;
+  }
+  
+  /* Restore normal button padding */
+  .btn {
+    margin-bottom: 0;
+  }
+  
+  /* Adjust card spacing */
+  .card {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Collapsible menu styles */
+.navbar-collapse.collapsing,
+.navbar-collapse.show {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hamburger menu animation */
+.hamburger {
+  width: 30px;
+  height: 20px;
+  position: relative;
+  margin: 0;
+  transform: rotate(0deg);
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: #fff;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0px;
+}
+
+.hamburger span:nth-child(2),
+.hamburger span:nth-child(3) {
+  top: 9px;
+}
+
+.hamburger span:nth-child(4) {
+  top: 18px;
+}
+
+.hamburger.open span:nth-child(1) {
+  top: 9px;
+  width: 0%;
+  left: 50%;
+}
+
+.hamburger.open span:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+.hamburger.open span:nth-child(4) {
+  top: 9px;
+  width: 0%;
+  left: 50%;
+}

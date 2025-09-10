@@ -1,3 +1,4 @@
+/* Base styles with mobile-first approach */
 body {
   margin: 0;
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,11 +7,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f8f9fa;
   color: #212529;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
 .note-card:hover {
@@ -19,10 +33,92 @@ code {
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
+/* Border radius utilities */
 .rounded-4 {
   border-radius: 1rem !important;
 }
 
 .rounded-pill {
   border-radius: 50rem !important;
+}
+
+/* Hero section styling */
+.hero {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 767.98px) {
+  .hero {
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .hero h1 {
+    font-size: 1.75rem;
+  }
+  
+  .hero p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 2rem;
+  }
+  
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Responsive typography */
+.fs-1 {
+  font-size: calc(1.375rem + 1.5vw) !important;
+}
+
+.fs-2 {
+  font-size: calc(1.325rem + 0.9vw) !important;
+}
+
+.fs-3 {
+  font-size: calc(1.3rem + 0.6vw) !important;
+}
+
+.fs-4 {
+  font-size: calc(1.275rem + 0.3vw) !important;
+}
+
+.fs-5 {
+  font-size: 1.25rem !important;
+}
+
+.fs-6 {
+  font-size: 1rem !important;
+}
+
+/* Responsive spacing */
+@media (max-width: 767.98px) {
+  .w-md-auto {
+    width: 100% !important;
+  }
+  
+  .text-md-start {
+    text-align: center !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .w-md-auto {
+    width: auto !important;
+  }
+  
+  .text-md-start {
+    text-align: left !important;
+  }
 }

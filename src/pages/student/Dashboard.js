@@ -8,6 +8,7 @@ import Badge from "react-bootstrap/Badge";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../services/auth";
 import { getUnreadCountByType } from "../../services/notifications";
+import NotificationBell from "../../components/NotificationBell";
 import StudentNotes from "./Notes";
 import StudentClasses from "./Classes";
 import StudentAssignments from "./Assignments";
@@ -29,24 +30,26 @@ const StudentDashboard = () => {
   );
 
   const tabs = [
-    { key: "notes", title: "📄 Notes", component: StudentNotes, count: getUnreadCountByType('student', 'note') },
+    { key: "notes", title: "📄 Notes", component: StudentNotes, type: 'note' },
     {
       key: "assignments",
       title: "📚 Assignments",
       component: StudentAssignments,
-      count: getUnreadCountByType('student', 'assignment')
+      type: 'assignment'
     },
-    { key: "grades", title: "🏆 Grades", component: StudentGrades, count: getUnreadCountByType('student', 'grade') },
-    { key: "quizzes", title: "📝 Take Quiz", component: StudentQuizzes, count: getUnreadCountByType('student', 'quiz') },
+    { key: "grades", title: "🏆 Grades", component: StudentGrades, type: 'grade' },
+    { key: "quizzes", title: "📝 Take Quiz", component: StudentQuizzes, type: 'quiz' },
     {
       key: "classes",
       title: "🎥 My Lecturer's Classes",
       component: StudentClasses,
+      type: 'class'
     },
     {
       key: "directory",
       title: "🎥 Other Lecturers' Classes",
       component: ClassDirectory,
+      type: 'directory'
     },
     { key: "calendar", title: "📅 Calendar", component: StudentCalendar },
     {
@@ -87,10 +90,12 @@ const StudentDashboard = () => {
                   <Nav.Link
                     active={defaultTab === tab.key}
                     onClick={() => navigate(`/student?tab=${tab.key}`)}
-                    className="text-start d-flex justify-content-between align-items-start"
+                    className="text-start d-flex justify-content-between align-items-center"
                   >
-                    {tab.title}
-                    {tab.count > 0 && <Badge bg="danger">{tab.count}</Badge>}
+                    <span className="d-flex align-items-center">
+                      {tab.title}
+                      {tab.type && <NotificationBell type={tab.type} role="student" />}
+                    </span>
                   </Nav.Link>
                 </Nav.Item>
               ))}

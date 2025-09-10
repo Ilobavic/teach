@@ -15,6 +15,11 @@ import Nav from "react-bootstrap/Nav";
 import NotificationBell from "./components/NotificationBell";
 import ToastManager from "./components/ToastManager";
 import ConfirmModal from "./components/ConfirmModal";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "./styles/animations.css";
+import "./styles/responsive.css";
+import "./scripts/responsive.js";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -28,14 +33,35 @@ import { getCurrentUserRole, isAuthenticated, logout } from "./services/auth";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [loadingClass, setLoadingClass] = useState("");
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 4000);
-    return () => clearTimeout(timer);
+    // Start with a minimum loading time for better UX
+    const minLoadTime = 2500;
+    
+    // Simulate app initialization
+    const initializeApp = async () => {
+      // Add any initialization logic here
+      await new Promise(resolve => setTimeout(resolve, minLoadTime));
+      
+      // Fade out loading screen
+      setLoadingClass("fade-out");
+      
+      // Remove loading component after animation completes
+      setTimeout(() => setLoading(false), 500);
+    };
+    
+    initializeApp();
+    
+    return () => {};
   }, []);
 
   if (loading) {
-    return <Loading />;
+    return (
+      <div className={loadingClass}>
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -43,10 +69,20 @@ function App() {
       <Navbar bg="primary" variant="dark" expand="md" className="shadow-sm">
         <Container>
           <NavbarBrand />
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0">
+            <div className="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </Navbar.Toggle>
           <NavbarBody />
         </Container>
       </Navbar>
+      
+      {/* Toast Manager for notifications */}
+      <ToastManager />
 
       <Container className="py-4 animate__animated animate__fadeIn">
         <ConfirmModal />

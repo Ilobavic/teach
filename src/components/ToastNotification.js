@@ -26,6 +26,10 @@ const ToastNotification = ({ notification, onClose }) => {
       case 'announcement': return '📢';
       case 'quiz': return '📝';
       case 'grade': return '🏆';
+      case 'success': return '✅';
+      case 'error': return '❌';
+      case 'warning': return '⚠️';
+      case 'info': return 'ℹ️';
       default: return '🔔';
     }
   };
@@ -37,6 +41,10 @@ const ToastNotification = ({ notification, onClose }) => {
       case 'announcement': return 'info';
       case 'quiz': return 'success';
       case 'grade': return 'secondary';
+      case 'success': return 'success';
+      case 'error': return 'danger';
+      case 'warning': return 'warning';
+      case 'info': return 'info';
       default: return 'primary';
     }
   };
@@ -47,7 +55,7 @@ const ToastNotification = ({ notification, onClose }) => {
         show={show} 
         onClose={handleClose}
         bg={getNotificationColor(notification.type)}
-        className="text-white"
+        className="text-white animate__animated animate__fadeIn"
       >
         <Toast.Header closeButton={false}>
           <span className="me-2 fs-5">
