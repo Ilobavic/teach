@@ -3,7 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { loadAssignments, loadQuizzes, loadGrades, saveGrades } from '../../services/auth';
+import { loadAssignments, loadQuizzes, loadGrades, saveGrades, getCurrentUser } from '../../services/auth';
+import { notifyStudentsOfNewContent } from '../../services/notifications';
 
 const LecturerGrades = () => {
   const [grades, setGrades] = useState([]);
@@ -39,16 +40,38 @@ const LecturerGrades = () => {
     const updated = [newRecord, ...grades];
     setGrades(updated);
     saveGrades(updated);
+
+    // Notify students of new grade
+    const user = getCurrentUser();
+    const notification = notifyStudentsOfNewContent(
+      'grade',
+      `New Grade for ${newRecord.itemTitle}`,
+      `You received a score of ${newRecord.score}/${newRecord.max}`,
+      user?.name || 'Lecturer'
+    );
+
+    // Trigger toast notification
+    window.dispatchEvent(new CustomEvent('newNotification', { detail: notification }));
+
     setStudentId('');
     setScore('');
     setMax('');
   };
 
   const deleteGrade = (idx) => {
-    if (!window.confirm('Delete this grade?')) return;
-    const updated = grades.filter((_, i) => i !== idx);
-    setGrades(updated);
-    saveGrades(updated);
+    const detail = {
+      title: 'Delete grade',
+      message: 'Delete this grade?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = grades.filter((_, i) => i !== idx);
+        setGrades(updated);
+        saveGrades(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

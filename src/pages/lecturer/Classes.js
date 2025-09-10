@@ -44,10 +44,19 @@ const Classes = () => {
   };
 
   const deleteClass = (index) => {
-    if (!window.confirm('Delete this class?')) return;
-    const updated = classesList.filter((_, i) => i !== index);
-    setClassesList(updated);
-    saveLecturerClasses(updated);
+    const detail = {
+      title: 'Delete class',
+      message: 'Delete this class?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = classesList.filter((_, i) => i !== index);
+        setClassesList(updated);
+        saveLecturerClasses(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

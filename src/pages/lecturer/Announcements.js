@@ -59,10 +59,19 @@ const Announcements = () => {
   };
 
   const deleteAnnouncement = (idx) => {
-    if (!window.confirm('Delete this announcement?')) return;
-    const updated = announcements.filter((_, i) => i !== idx);
-    setAnnouncements(updated);
-    saveAnnouncements(updated);
+    const detail = {
+      title: 'Delete announcement',
+      message: 'Delete this announcement?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = announcements.filter((_, i) => i !== idx);
+        setAnnouncements(updated);
+        saveAnnouncements(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

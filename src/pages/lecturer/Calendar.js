@@ -30,10 +30,19 @@ const LecturerCalendar = () => {
   };
 
   const deleteEvent = (idx) => {
-    if (!window.confirm('Delete this event?')) return;
-    const updated = events.filter((_, i) => i !== idx);
-    setEvents(updated);
-    saveCalendarEvents(updated);
+    const detail = {
+      title: 'Delete event',
+      message: 'Delete this event?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = events.filter((_, i) => i !== idx);
+        setEvents(updated);
+        saveCalendarEvents(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

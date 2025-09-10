@@ -46,6 +46,11 @@ export function getUnreadCount(role = 'student') {
   return notifications.filter(n => !n.read && n.targetRole === role).length;
 }
 
+export function getUnreadCountByType(role = 'student', type) {
+  const notifications = loadNotifications();
+  return notifications.filter(n => !n.read && n.targetRole === role && n.type === type).length;
+}
+
 export function getNotificationsForRole(role = 'student', limit = 10) {
   const notifications = loadNotifications();
   return notifications

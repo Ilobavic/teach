@@ -51,10 +51,19 @@ const Notes = () => {
   };
 
   const deleteNote = (index) => {
-    if (!window.confirm('Delete this note?')) return;
-    const newNotes = notes.filter((_, i) => i !== index);
-    setNotes(newNotes);
-    saveLecturerNotes(newNotes);
+    const detail = {
+      title: 'Delete note',
+      message: 'Delete this note?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const newNotes = notes.filter((_, i) => i !== index);
+        setNotes(newNotes);
+        saveLecturerNotes(newNotes);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

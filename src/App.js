@@ -14,6 +14,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NotificationBell from "./components/NotificationBell";
 import ToastManager from "./components/ToastManager";
+import ConfirmModal from "./components/ConfirmModal";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -48,6 +49,7 @@ function App() {
       </Navbar>
 
       <Container className="py-4 animate__animated animate__fadeIn">
+        <ConfirmModal />
         <ToastManager role={getCurrentUserRole()} />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -164,10 +166,23 @@ function NavbarBody() {
   const authed = isAuthenticated();
 
   const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      logout();
-      navigate("/", { replace: true });
-    }
+    // show the styled confirm modal via a custom event
+    const detail = {
+      title: 'Logout',
+      message: 'Are you sure you want to logout? You will be returned to the homepage.',
+      confirmText: 'Logout',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        // play a quick page fade-out by adding a class to root
+        document.documentElement.classList.add('cp-page-exit');
+        setTimeout(() => {
+          logout();
+          navigate('/', { replace: true });
+        }, 420);
+      },
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   if (isOnLogin) return null;

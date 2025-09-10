@@ -3,7 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { loadQuizzes, saveQuizzes } from '../../services/auth';
+import { loadQuizzes, saveQuizzes, getCurrentUser } from '../../services/auth';
+import { notifyStudentsOfNewContent } from '../../services/notifications';
 
 const Quizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -47,6 +48,19 @@ const Quizzes = () => {
     const updated = [newQuiz, ...quizzes];
     setQuizzes(updated);
     saveQuizzes(updated);
+
+    // Notify students of new quiz
+    const user = getCurrentUser();
+    const notification = notifyStudentsOfNewContent(
+      'quiz',
+      newQuiz.title,
+      `A new quiz with ${newQuiz.questions.length} questions has been posted.`,
+      user?.name || 'Lecturer'
+    );
+    
+    // Trigger toast notification
+    window.dispatchEvent(new CustomEvent('newNotification', { detail: notification }));
+
     setTitle('');
     setBuilderQuestions([]);
     setQuestionText('');
@@ -56,10 +70,19 @@ const Quizzes = () => {
   };
 
   const deleteQuiz = (idx) => {
-    if (!window.confirm('Delete this quiz?')) return;
-    const updated = quizzes.filter((_, i) => i !== idx);
-    setQuizzes(updated);
-    saveQuizzes(updated);
+    const detail = {
+      title: 'Delete quiz',
+      message: 'Delete this quiz?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = quizzes.filter((_, i) => i !== idx);
+        setQuizzes(updated);
+        saveQuizzes(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

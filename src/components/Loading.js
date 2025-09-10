@@ -19,11 +19,11 @@ const Loading = () => {
   }, []);
 
   return (
-    <div className="loading-screen d-flex flex-column justify-content-center align-items-center vh-100 bg-white text-primary animate__animated animate__fadeIn">
+    <div className="loading-screen d-flex flex-column justify-content-center align-items-center vh-100 bg-primary text-white animate__animated animate__fadeIn">
       <div className="text-center">
         <div className="logo mb-3">
           <i
-            className="bi bi-mortarboard-fill text-primary"
+            className="bi bi-mortarboard-fill"
             style={{ fontSize: "4rem" }}
           ></i>
         </div>

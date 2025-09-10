@@ -54,10 +54,19 @@ const Assignments = () => {
   };
 
   const deleteAssignment = (idx) => {
-    if (!window.confirm('Delete this assignment?')) return;
-    const updated = assignments.filter((_, i) => i !== idx);
-    setAssignments(updated);
-    saveAssignments(updated);
+    const detail = {
+      title: 'Delete assignment',
+      message: 'Delete this assignment?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = assignments.filter((_, i) => i !== idx);
+        setAssignments(updated);
+        saveAssignments(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   return (

@@ -51,10 +51,19 @@ const LecturerAttendance = () => {
   };
 
   const deleteSession = (idx) => {
-    if (!window.confirm('Delete this attendance session?')) return;
-    const updated = sessions.filter((_, i) => i !== idx);
-    setSessions(updated);
-    saveAttendanceSessions(updated);
+    const detail = {
+      title: 'Delete attendance session',
+      message: 'Delete this attendance session?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      styleMode: 'dark',
+      onConfirm: () => {
+        const updated = sessions.filter((_, i) => i !== idx);
+        setSessions(updated);
+        saveAttendanceSessions(updated);
+      }
+    };
+    window.dispatchEvent(new CustomEvent('showConfirm', { detail }));
   };
 
   const classSummaries = sessions.reduce((map, s) => {
